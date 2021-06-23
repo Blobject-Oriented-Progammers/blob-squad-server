@@ -1,1 +1,6 @@
 Had to completely replace our express api template
+--------
+entry-resource:
+Add entry.js model file
+Delete example routes file
+Update server.js to remove example routes
