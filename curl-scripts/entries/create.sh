@@ -8,6 +8,7 @@ curl "${API}${URL_PATH}" \
 --header "Authorization: Bearer ${TOKEN}" \
 --data '{
     "entry": {
+      "title": "'"${TITLE}"'",
       "text": "'"${TEXT}"'",
       "owner": "'"${OWNER}"'"
     }
