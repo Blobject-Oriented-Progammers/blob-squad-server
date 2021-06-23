@@ -65,5 +65,6 @@ router.delete('/entries/:id', requireToken, (req, res, next) => {
 
 // BadParamsError,
 // BadCredentialsError,
+// editing for new commit on correct branch
 
 module.exports = router
