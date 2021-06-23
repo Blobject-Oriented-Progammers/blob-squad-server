@@ -18,8 +18,8 @@ router.post('/create-entry', requireToken, (req, res, next) => {
 })
 
 // index
-router.get('/entries', requireToken, (req, res, next) => {
-  Entry.find({owner: req.user._id})
+router.get('/entries', (req, res, next) => {
+  Entry.find()
     .then(entries => {
       res.status(200).json({ entries })
     })
