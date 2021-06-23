@@ -3,5 +3,6 @@ URL_PATH="/entries"
 
 curl "${API}${URL_PATH}" \
 --include \
---request GET \
---header "Authorization: Bearer ${TOKEN}" \
+--request GET
+
+echo
