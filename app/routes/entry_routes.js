@@ -19,7 +19,7 @@ router.post('/create-entry', requireToken, (req, res, next) => {
 
 // index
 router.get('/entries', (req, res, next) => {
-  Entry.find()
+  Entry.find().populate('owner').populate('comment.author')
     .then(entries => {
       res.status(200).json({ entries })
     })
@@ -28,7 +28,7 @@ router.get('/entries', (req, res, next) => {
 
 // show
 router.get('/entries/:id', (req, res, next) => {
-  Entry.findById(req.params.id)
+  Entry.findById(req.params.id).populate('owner').populate('comment.author')
     .then(handle404)
     .then(entry => {
       return res.status(200).json({ entry })
