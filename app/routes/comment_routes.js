@@ -22,16 +22,16 @@ router.post('/comments', (req, res, next) => {
 // DELETE /reviews/:id
 router.delete('/reviews/:id', (req, res, next) => {
   // extract the review's id from the url
-  const reviewId = req.params.id
+  const commentId = req.params.id
   console.log('body is ', req.body)
   // extract the entry's id from the incoming request's data
-  const entryId = req.body.review.entryId
+  const entryId = req.body.comment.entryId
   // Find entry by ID
   Entry.findById(entryId)
   // select the review subdocument with the id `reviewId`
     .then(entry => {
       // then remove it (delete it)
-      entry.reviews.id(reviewId).remove()
+      entry.comments.id(commentId).remove()
       // save our deletion
       return entry.save()
     })
@@ -41,21 +41,21 @@ router.delete('/reviews/:id', (req, res, next) => {
 })
 
 // PATCH /reviews/:id
-router.patch('/reviews/:id', (req, res, next) => {
+router.patch('/comments/:id', (req, res, next) => {
   // extract the review's id from the url
-  const reviewId = req.params.id
+  const commentId = req.params.id
   // extract the entry's id from the incoming request's data
   const entryId = req.body.review.entryId
   // extract the review from the request's data (body)
-  const reviewData = req.body.review
+  const commentData = req.body.review
   // Find entry by ID
   Entry.findById(entryId)
     // select the review subdocument with the id `reviewId`
     .then(entry => {
       // select the review with the id  `reviewId`
-      const review = entry.reviews.id(reviewId)
+      const comment = entry.comments.id(commentId)
       // update our review, with the request's data (reviewData)
-      review.set(reviewData)
+      comment.set(commentData)
       // save our changes, by saving the entry
       return entry.save()
     })
