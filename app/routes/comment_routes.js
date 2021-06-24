@@ -1,67 +1,67 @@
 const express = require('express')
 const router = express.Router()
-const passport = require('passport')
-const requireToken = passport.authenticate('bearer', { session: false })
-const { requireOwnership } = require('./../../lib/custom_errors')
+// const passport = require('passport')
+// const requireToken = passport.authenticate('bearer', { session: false })
+// const { requireOwnership } = require('./../../lib/custom_errors')
 // const crypto = require('crypto')
-const Review = require('./../models/review')
+const Entry = require('./../models/entry')
 
 // create
-router.post('/create-review', requireToken, (req, res, next) => {
-  Review.create(req.body.review)
-    .then(review => {
-      res.status(201).json({ review })
+router.post('/comments', (req, res, next) => {
+  const commentData = req.body.comment
+  const entryId = commentData.entryId
+
+  Entry.findById(entryId)
+    .then(entry => {
+      entry.comments.push(commentData) // comments = our child array on Entry model
+      return entry.save()
     })
+    .then(entry => res.status(201).json({ entry }))
+    .catch(next)
+})
+// DELETE /reviews/:id
+router.delete('/reviews/:id', (req, res, next) => {
+  // extract the review's id from the url
+  const reviewId = req.params.id
+  console.log('body is ', req.body)
+  // extract the entry's id from the incoming request's data
+  const entryId = req.body.review.entryId
+  // Find entry by ID
+  Entry.findById(entryId)
+  // select the review subdocument with the id `reviewId`
+    .then(entry => {
+      // then remove it (delete it)
+      entry.reviews.id(reviewId).remove()
+      // save our deletion
+      return entry.save()
+    })
+    // if successfully deleted, respond with 204 No Content
+    .then(() => res.sendStatus(204))
     .catch(next)
 })
 
-// // index
-// router.get('/entries', (req, res, next) => {
-//   Review.find()
-//     .then(entries => {
-//       res.status(200).json({ entries })
-//     })
-//     .catch(next)
-// })
-// we deleted the 404 - handle404
-// // show
-// router.get('/entries/:id', (req, res, next) => {
-//   Review.findById(req.params.id)
-//     .then(handle404)
-//     .then(review => {
-//       return res.status(200).json({ review })
-//     })
-//     .catch(next)
-// })
-
-// update
-router.patch('/entries/:id', requireToken, (req, res, next) => {
-  Review.findById(req.params.id)
-    .then(review => {
-      requireOwnership(req, review)
-      return review.updateOne(req.body.review)
+// PATCH /reviews/:id
+router.patch('/reviews/:id', (req, res, next) => {
+  // extract the review's id from the url
+  const reviewId = req.params.id
+  // extract the entry's id from the incoming request's data
+  const entryId = req.body.review.entryId
+  // extract the review from the request's data (body)
+  const reviewData = req.body.review
+  // Find entry by ID
+  Entry.findById(entryId)
+    // select the review subdocument with the id `reviewId`
+    .then(entry => {
+      // select the review with the id  `reviewId`
+      const review = entry.reviews.id(reviewId)
+      // update our review, with the request's data (reviewData)
+      review.set(reviewData)
+      // save our changes, by saving the entry
+      return entry.save()
     })
-    .then(() => {
-      res.sendStatus(204)
-    })
+    // if successfully, respond with 204 No Content
+    .then(() => res.sendStatus(204))
     .catch(next)
 })
-
-// delete
-router.delete('/entries/:id', requireToken, (req, res, next) => {
-  Review.findById(req.params.id)
-    .then(review => {
-      requireOwnership(req, review)
-      review.deleteOne()
-    })
-    .then(() => {
-      res.sendStatus(204)
-    })
-    .catch(next)
-})
-
-// BadParamsError,
-// BadCredentialsError,
-// editing for new commit on correct branch
 
 module.exports = router

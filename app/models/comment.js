@@ -1,16 +1,16 @@
+'use strict'
 const mongoose = require('mongoose')
-
-const commentSchema = new mongoose.Schema({
-  text: {
+const Schema = mongoose.Schema
+const commentSchema = new Schema({
+  content: {
     type: String,
     required: true
   },
   author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }
+}, {
   timestamps: true
 })
-
 module.exports = commentSchema
