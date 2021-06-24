@@ -27,10 +27,9 @@ router.get('/entries', (req, res, next) => {
 })
 
 // show
-router.get('/entries/:id', requireToken, (req, res, next) => {
+router.get('/entries/:id', (req, res, next) => {
   Entry.findById(req.params.id)
     .then(handle404)
-    .then(entry => requireOwnership(req, entry))
     .then(entry => {
       return res.status(200).json({ entry })
     })
