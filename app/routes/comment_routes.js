@@ -19,16 +19,18 @@ router.post('/comments', (req, res, next) => {
     .then(entry => res.status(201).json({ entry }))
     .catch(next)
 })
-// DELETE /reviews/:id
-router.delete('/reviews/:id', (req, res, next) => {
-  // extract the review's id from the url
+
+// DELETE /comments/:id
+router.delete('/comments/:id', (req, res, next) => {
+  // extract the comment's id from the url
+
   const commentId = req.params.id
   console.log('body is ', req.body)
   // extract the entry's id from the incoming request's data
   const entryId = req.body.comment.entryId
   // Find entry by ID
   Entry.findById(entryId)
-  // select the review subdocument with the id `reviewId`
+  // select the comment subdocument with the id `commentId`
     .then(entry => {
       // then remove it (delete it)
       entry.comments.id(commentId).remove()
@@ -40,21 +42,24 @@ router.delete('/reviews/:id', (req, res, next) => {
     .catch(next)
 })
 
-// PATCH /reviews/:id
+// PATCH /comments/:id
 router.patch('/comments/:id', (req, res, next) => {
-  // extract the review's id from the url
+  // extract the comment's id from the url
   const commentId = req.params.id
   // extract the entry's id from the incoming request's data
-  const entryId = req.body.review.entryId
-  // extract the review from the request's data (body)
-  const commentData = req.body.review
+  const entryId = req.body.comment.entryId
+  // extract the comment from the request's data (body)
+  const commentData = req.body.comment
+
   // Find entry by ID
   Entry.findById(entryId)
-    // select the review subdocument with the id `reviewId`
+    // select the comment subdocument with the id `commentId`
     .then(entry => {
-      // select the review with the id  `reviewId`
+
+      // select the comment with the id  `commentId`
       const comment = entry.comments.id(commentId)
-      // update our review, with the request's data (reviewData)
+      // update our comment, with the request's data (commentData)
+      
       comment.set(commentData)
       // save our changes, by saving the entry
       return entry.save()

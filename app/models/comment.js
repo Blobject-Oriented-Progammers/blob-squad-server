@@ -13,4 +13,6 @@ const commentSchema = new Schema({
 }, {
   timestamps: true
 })
+
+// changed
 module.exports = commentSchema
