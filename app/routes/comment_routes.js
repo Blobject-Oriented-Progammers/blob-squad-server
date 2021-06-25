@@ -55,11 +55,10 @@ router.patch('/comments/:id', (req, res, next) => {
   Entry.findById(entryId)
     // select the comment subdocument with the id `commentId`
     .then(entry => {
-
       // select the comment with the id  `commentId`
       const comment = entry.comments.id(commentId)
       // update our comment, with the request's data (commentData)
-      
+
       comment.set(commentData)
       // save our changes, by saving the entry
       return entry.save()
