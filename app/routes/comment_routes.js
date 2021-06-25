@@ -19,9 +19,11 @@ router.post('/comments', (req, res, next) => {
     .then(entry => res.status(201).json({ entry }))
     .catch(next)
 })
+
 // DELETE /comments/:id
 router.delete('/comments/:id', (req, res, next) => {
   // extract the comment's id from the url
+
   const commentId = req.params.id
   console.log('body is ', req.body)
   // extract the entry's id from the incoming request's data
@@ -48,13 +50,16 @@ router.patch('/comments/:id', (req, res, next) => {
   const entryId = req.body.comment.entryId
   // extract the comment from the request's data (body)
   const commentData = req.body.comment
+
   // Find entry by ID
   Entry.findById(entryId)
     // select the comment subdocument with the id `commentId`
     .then(entry => {
+
       // select the comment with the id  `commentId`
       const comment = entry.comments.id(commentId)
       // update our comment, with the request's data (commentData)
+      
       comment.set(commentData)
       // save our changes, by saving the entry
       return entry.save()
