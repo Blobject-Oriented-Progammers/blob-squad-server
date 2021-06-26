@@ -13,6 +13,7 @@ router.post('/comments', (req, res, next) => {
 
   Entry.findById(entryId)
     .then(entry => {
+      console.log(entry)
       entry.comments.push(commentData) // comments = our child array on Entry model
       return entry.save()
     })
