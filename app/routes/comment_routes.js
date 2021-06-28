@@ -13,7 +13,6 @@ router.post('/comments', (req, res, next) => {
 
   Entry.findById(entryId)
     .then(entry => {
-      console.log(entry)
       entry.comments.push(commentData) // comments = our child array on Entry model
       return entry.save()
     })
@@ -26,7 +25,6 @@ router.delete('/comments/:id', (req, res, next) => {
   // extract the comment's id from the url
 
   const commentId = req.params.id
-  console.log('body is ', req.body)
   // extract the entry's id from the incoming request's data
   const commentData = req.body.comment
   const entryId = commentData.entryId

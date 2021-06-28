@@ -34,7 +34,7 @@ ERD -
 https://imgur.com/a/CkdbHcZ
 
 A catalog of routes (paths and methods) that the API expects -
-METHODS
+METHODS..
 -- GET POST PATCH DELETE
 PATHS
 -- entries, comments, create-entries
