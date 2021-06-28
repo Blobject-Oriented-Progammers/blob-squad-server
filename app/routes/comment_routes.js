@@ -28,7 +28,8 @@ router.delete('/comments/:id', (req, res, next) => {
   const commentId = req.params.id
   console.log('body is ', req.body)
   // extract the entry's id from the incoming request's data
-  const entryId = req.body.comment.entryId
+  const commentData = req.body.comment
+  const entryId = commentData.entryId
   // Find entry by ID
   Entry.findById(entryId)
   // select the comment subdocument with the id `commentId`
