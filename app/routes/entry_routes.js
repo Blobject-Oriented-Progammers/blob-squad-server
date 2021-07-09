@@ -10,6 +10,7 @@ const Entry = require('./../models/entry')
 
 // create
 router.post('/create-entry', requireToken, (req, res, next) => {
+  req.body.entry.owner = req.user.id
   Entry.create(req.body.entry)
     .then(entry => {
       res.status(201).json({ entry })
@@ -38,6 +39,7 @@ router.get('/entries/:id', (req, res, next) => {
 
 // update
 router.patch('/entries/:id', requireToken, (req, res, next) => {
+  req.body.entry.owner = req.user.id
   Entry.findById(req.params.id)
     .then(entry => {
       requireOwnership(req, entry)
