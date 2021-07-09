@@ -1,15 +1,16 @@
 const express = require('express')
 const router = express.Router()
-// const passport = require('passport')
-// const requireToken = passport.authenticate('bearer', { session: false })
-// const { requireOwnership } = require('./../../lib/custom_errors')
+const passport = require('passport')
+const requireToken = passport.authenticate('bearer', { session: false })
+const { requireOwnership } = require('./../../lib/custom_errors')
 // const crypto = require('crypto')
 const Entry = require('./../models/entry')
 
 // create
-router.post('/comments', (req, res, next) => {
+router.post('/comments', requireToken, (req, res, next) => {
   const commentData = req.body.comment
   const entryId = commentData.entryId
+  req.body.comment.owner = req.user.id
 
   Entry.findById(entryId)
     .then(entry => {
@@ -22,9 +23,9 @@ router.post('/comments', (req, res, next) => {
 })
 
 // DELETE /comments/:id
-router.delete('/comments/:id', (req, res, next) => {
+router.delete('/comments/:id', requireToken, (req, res, next) => {
   // extract the comment's id from the url
-
+  req.body.comment.owner = req.user.id
   const commentId = req.params.id
   console.log('body is ', req.body)
   // extract the entry's id from the incoming request's data
@@ -35,6 +36,7 @@ router.delete('/comments/:id', (req, res, next) => {
   // select the comment subdocument with the id `commentId`
     .then(entry => {
       // then remove it (delete it)
+      requireOwnership(req, entry)
       entry.comments.id(commentId).remove()
       // save our deletion
       return entry.save()
@@ -45,7 +47,8 @@ router.delete('/comments/:id', (req, res, next) => {
 })
 
 // PATCH /comments/:id
-router.patch('/comments/:id', (req, res, next) => {
+router.patch('/comments/:id', requireToken, (req, res, next) => {
+  req.body.comment.owner = req.owner
   // extract the comment's id from the url
   const commentId = req.params.id
   // extract the entry's id from the incoming request's data
