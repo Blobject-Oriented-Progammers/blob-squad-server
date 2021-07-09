@@ -8,9 +8,9 @@ const Entry = require('./../models/entry')
 
 // create
 router.post('/comments', requireToken, (req, res, next) => {
+  req.body.comment.owner = req.user.id
   const commentData = req.body.comment
   const entryId = commentData.entryId
-  req.body.comment.owner = req.user.id
 
   Entry.findById(entryId)
     .then(entry => {
@@ -27,7 +27,7 @@ router.delete('/comments/:id', requireToken, (req, res, next) => {
   // extract the comment's id from the url
   req.body.comment.owner = req.user.id
   const commentId = req.params.id
-  console.log('body is ', req.body)
+  console.log('user is ', req.user)
   // extract the entry's id from the incoming request's data
   const commentData = req.body.comment
   const entryId = commentData.entryId
@@ -36,8 +36,10 @@ router.delete('/comments/:id', requireToken, (req, res, next) => {
   // select the comment subdocument with the id `commentId`
     .then(entry => {
       // then remove it (delete it)
-      requireOwnership(req, entry)
-      entry.comments.id(commentId).remove()
+      const myComment = entry.comments.id(commentId)
+      console.log('myComment: ', myComment)
+      requireOwnership(req, myComment)
+      myComment.remove()
       // save our deletion
       return entry.save()
     })
